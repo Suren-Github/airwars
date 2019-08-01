@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-// import logo from './logo.svg';
+import airplane from './content/images/airplane.png';
+import './../node_modules/bootstrap/dist/css/bootstrap.css';
 import './App.css';
+import './styles/dicezone.css';
 
 import Constants from './content/constants';
 import Title from './components/molecules/Title';
@@ -38,7 +40,11 @@ export default class App extends Component {
             Learn React
           </a>
         </header> */}
+
+        <img src={airplane} className="App-logo" alt="logo" />
         <Title name={this.state.name}></Title>
+
+
         <Game />
 
       </div>

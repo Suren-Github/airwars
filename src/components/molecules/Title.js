@@ -9,7 +9,7 @@ const Title = (props) => {
         setName(name);
     }, [name]); // 2nd param makes the useEffect to call only when the value changes. Similar to ComponentWillReceiveProps
     // console.log("entered return of Title.js", name);
-    return <h1>{name}</h1>;
+    return <h1 className='app-title'>{name}</h1>;
     
 
     // return <h1>{props.name}</h1>;  

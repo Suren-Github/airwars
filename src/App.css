@@ -3,9 +3,12 @@
 }
 
 .App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
+  animation: App-logo-spin 2 .4s linear;
+  height: 100px;
   pointer-events: none;
+  margin-left: -42px;
+  display: inline-block;
+  transform: rotate(321deg);
 }
 
 .App-header {
@@ -17,6 +20,11 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.app-title {
+  display: inline-block;
+  margin-left: -42px;
 }
 
 .App-link {
@@ -31,3 +39,4 @@
     transform: rotate(360deg);
   }
 }
+

@@ -38,7 +38,6 @@ class DiceZone extends React.Component {
     }
 
     getRandomInt = () => {
-        debugger;
         const maxNo = constants.dice.sidesOfDice;
         const firstDice = Math.floor(Math.random() * Math.floor(maxNo)),
             secondDice = Math.floor(Math.random() * Math.floor(maxNo));
@@ -86,17 +85,27 @@ class DiceZone extends React.Component {
     render() {
         console.log('DiceZone :', this.state);
         return (
-            <div>
-                {this.state.player ? <PlayerDetails player={this.state.player[constants.player[1].id]} /> : ''}
-                <Dice value={this.state.firstDice} />
-                <Dice value={this.state.secondDice} />
-                <Roll onClickRoll={this.getRandomInt} onDisableDice={this.state.disableDice} btnStyle={btnRoll} />
-                <Result total={this.state.totalDiceCount} />
-                <DiceTurns playerId={Constants.player[1].id} diceHistory={this.state.currentDiceTurn} />
-                {this.state.player ? <PlayerDetails player={this.state.player[constants.player[2].id]} /> : ''}
+            <div className='container-fluid'>
+                <div className='player-details display-inline-block'>
+                    {Object.keys(this.state.player).length !== 0 ? <PlayerDetails player={this.state.player[constants.player[1].id]} /> : ''}
+                </div>
+                <div className='display-inline-block'>
+                    <Dice value={this.state.firstDice} />
+                    <Dice value={this.state.secondDice} />
+                    <Roll onClickRoll={this.getRandomInt} onDisableDice={this.state.disableDice} btnStyle={btnRoll} />
+
+                    <Result total={this.state.totalDiceCount} />
+
+
+                    <DiceTurns playerId={Constants.player[1].id} diceHistory={this.state.currentDiceTurn} />
+                </div>
+                <div className='player-details display-inline-block'>
+                    {/* {this.state.player ? <PlayerDetails player={this.state.player[constants.player[2].id]} /> : ''} */}
+                    {Object.keys(this.state.player).length !== 0 ? <PlayerDetails player={this.state.player[constants.player[2].id]} /> : ''}
+                </div>
                 <hr />
                 {/* <DiceHistory /> */}
-            </div>
+            </div >
         );
     };
 };
@@ -111,9 +120,10 @@ const mapDispatchToProps = dispatch => {
         //     dispatch(fetchDiceHistory(playerData));
         // },
 
-        // onUpdateDiceHistory: diceHistory => {
-        //     dispatch(updateDiceHistory(diceHistory));
-        // }
+        onUpdateDiceHistory: diceHistory => {
+            dispatch(updateDiceHistory(diceHistory));
+        },
+
         onUpdatePlayerDetails: (playerData) => {
             dispatch(updatePlayerDetails(playerData));
         },

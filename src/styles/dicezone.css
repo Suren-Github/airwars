@@ -1,0 +1,11 @@
+.display-inline-block {
+    display: inline-block;
+}
+
+.dice:nth-child(2) {
+    margin-left: 10px;
+}
+
+.padding10 {
+    padding: 10px
+}
