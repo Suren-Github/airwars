@@ -19,7 +19,7 @@ const DiceTurns = (props) => {
     return (
         <div className="card" style={{width: '500px'}}>
             <div className="card-body">
-                <h5 className="card-title">Dice turns of <i>Player{props.playerId}</i>: </h5>
+                <h5 className="card-title"><i>Player {props.playerId}</i> </h5>
                 <p className="card-text"> {props.diceHistory.length > 0 ? props.diceHistory.toString() : Constants.messages.rollDice}</p>
             </div>
         </div>

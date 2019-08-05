@@ -1,12 +1,12 @@
 import React from 'react';
 import DiceZone from './DiceZone';
-import PlayerZone from './PlayerZone';
+import GameZone from './GameZone';
 
 const Game = () => {
     return (
         <div>
             <DiceZone />
-            <PlayerZone />
+            <GameZone />
         </div>
     )
 }

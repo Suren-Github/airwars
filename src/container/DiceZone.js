@@ -1,7 +1,7 @@
 import React from 'react';
 // import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { fetchDiceHistory, updateDiceHistory, updatePlayerDetails, fetchPlayerDetail } from '../actions';
+import { fetchDiceHistory, updateDiceTurns, updatePlayerDetails, fetchPlayerDetail } from '../actions';
 // import { includes } from "lodash";
 import _ from 'lodash';
 
@@ -9,18 +9,19 @@ import Dice from '../components/molecules/Dice';
 import Roll from '../components/molecules/Roll';
 import Result from '../components/molecules/Result';
 import DiceTurns from '../components/molecules/DiceTurns';
-import DiceHistory from '../components/molecules/DiceHistory';
+// import DiceHistory from '../components/molecules/DiceHistory';
 
 import Constants from '../content/constants';
 import PlayerDetails from '../components/molecules/PlayerDetails';
+import Strategy from './../components/molecules/Strategy';
 
 // Q: Why can't I access Constants directly inside methods other than constructor and render?
 
-const constants = Constants,
-    btnRoll = {
-        display: 'block',
-        margin: '0 auto',
-    };
+//  const constants = Constants;
+const btnRoll = {
+    display: 'block',
+    margin: '0 auto',
+};
 
 class DiceZone extends React.Component {
 
@@ -34,11 +35,15 @@ class DiceZone extends React.Component {
             currentDiceTurn: [], // once the turn ends, entire object will be pushed to diceHistory
             disableDice: false,
             player: {},
+            currentPlayer: 1,
         };
+
+        // console.log('Constructor: ',Constants);
     }
 
     getRandomInt = () => {
-        const maxNo = constants.dice.sidesOfDice;
+        // console.log('getRandomInt: ',Constants);
+        const maxNo = Constants.dice.sidesOfDice;
         const firstDice = Math.floor(Math.random() * Math.floor(maxNo)),
             secondDice = Math.floor(Math.random() * Math.floor(maxNo));
 
@@ -47,64 +52,134 @@ class DiceZone extends React.Component {
 
     totalDiceCount = () => {
         let firstDice = this.state.firstDice, secondDice = this.state.secondDice,
-            totalDiceCount, disableDice = this.state.disableDice, currentDiceTurn = this.state.currentDiceTurn;
+            totalDiceCount;
+        // currentDiceTurn = this.state.currentDiceTurn;
 
         if (firstDice === 0 && secondDice === 0) {
-            totalDiceCount = constants.dice.twelve; // Condition to bring 12 in dice
+            totalDiceCount = Constants.dice.twelve; // Condition to bring 12 in dice
         } else {
             totalDiceCount = Number(this.state.firstDice) + Number(this.state.secondDice);
         }
 
-        currentDiceTurn = [...currentDiceTurn, totalDiceCount];
+        let currentDiceTurn = [...this.state.currentDiceTurn, totalDiceCount];
 
-        if (_.includes(constants.dice.noDoubles, totalDiceCount)) {
-            //disableDice = true;
+        if (_.includes(Constants.dice.noDoubles, totalDiceCount)) {
 
-            let diceHistory = [...this.state.diceHistory, { player: 1, turns: { ...currentDiceTurn } }];
-            this.setState({ disableDice, diceHistory });
+            this.props.onUpdateDiceTurns({ uname: Constants.player.players[this.state.currentPlayer].uname, turns: currentDiceTurn });
 
-            // Code to update the diceHistory to the store goes here...
-            // this.props.onUpdateDiceHistory(diceHistory[diceHistory.length-1]);
-            this.props.onUpdateDiceHistory({ player: this.state.player, diceHistory: currentDiceTurn });
+            this.setState({ currentDiceTurn: currentDiceTurn, currentPlayer: this.state.currentPlayer === 1 ? 2 : 1, disableDice: true, });
 
-            // return false;
+
+            // this.setState({currentPlayer: currentPlayer === 1 ? 2 : 1});
+
+            // let diceHistory = [...this.state.diceHistory, { uname: 'player1', turns: { ...currentDiceTurn } }];
+
+            // // Code to update the diceHistory to the store goes here...
+            // // this.props.onUpdateDiceHistory(diceHistory[diceHistory.length-1]);
+            // //this.props.onUpdateDiceHistory({ player: this.state.player, diceHistory: currentDiceTurn });
+            // this.props.onUpdateDiceHistory({ data: diceHistory[diceHistory.length - 1]});
+            // this.setState({currentDiceTurn: [], disableDice, diceHistory});
+            return false;
         }
 
-        this.setState({ totalDiceCount, disableDice, currentDiceTurn });
+        this.setState({ totalDiceCount, currentDiceTurn: currentDiceTurn });
+    }
+
+    /** Generates piece structure for both the players. Included to the playerData object  */
+    generatePieces(pieceCount, piece) {
+
+        let p1Pieces = {}, p2Pieces = {};
+
+        for (let count = 1; count <= pieceCount; count++) {
+            const p1PieceId = Constants.player.players[1].id + Constants.pieces.pieceIdAlphabet + count,
+                p2PieceId = Constants.player.players[2].id + Constants.pieces.pieceIdAlphabet + count;
+            // constants = Constants; // ? Unable to access Constants directly!
+            let p1Piece = {
+                id: p1PieceId,
+                name: count,
+                label: Constants.pieces.pieceIdAlphabet + count,
+                position: piece.position,
+                isSpawned: piece.isSpawned,
+                isReached: piece.isReached
+            },
+                p2Piece = {
+                    id: p2PieceId,
+                    name: count,
+                    label: Constants.pieces.pieceIdAlphabet + count,
+                    position: piece.position,
+                    isSpawned: piece.isSpawned,
+                    isReached: piece.isReached
+                };
+
+            p1Pieces[p1PieceId] = p1Piece;
+            p2Pieces[p2PieceId] = p2Piece;
+        }
+
+        // console.log(p1Pieces, p2Pieces);
+        return { p1Pieces, p2Pieces };
     }
 
     componentWillMount() {
-        const playerData = Constants.player;
+        // ? Unable to use Constant inside componentWillMount's object; Instead call as local constant(Here, playerData)
+        const pieces = this.generatePieces(Constants.pieces.gameType.sixPieces, Constants.pieces.piece), // Hardcoded pieces for now. Later there will be a select screen before the start of the game
+            playerData = Constants.player;
+
+        playerData.players[playerData.players[1].id].pieces = pieces.p1Pieces;
+        playerData.players[playerData.players[2].id].pieces = pieces.p2Pieces;
+
         this.props.onUpdatePlayerDetails(playerData);
     }
 
     componentWillReceiveProps(newProps) {
-        this.setState({ player: newProps.data.player.playerDetails });
+        this.setState({ player: newProps.data.player.playerDetails.players });
     }
 
     render() {
-        console.log('DiceZone :', this.state);
+        // console.log('DiceZone :', this.state);
+        // console.log('Render: ',Constants);
         return (
             <div className='container-fluid'>
-                <div className='player-details display-inline-block'>
-                    {Object.keys(this.state.player).length !== 0 ? <PlayerDetails player={this.state.player[constants.player[1].id]} /> : ''}
-                </div>
-                <div className='display-inline-block'>
-                    <Dice value={this.state.firstDice} />
-                    <Dice value={this.state.secondDice} />
-                    <Roll onClickRoll={this.getRandomInt} onDisableDice={this.state.disableDice} btnStyle={btnRoll} />
+                <div className='row'>
+                    <div className='col-md-4'>
+                        <div className="container">
+                            <div className='col-md-11'>
+                                <div className='player-details'>
+                                    {Object.keys(this.state.player).length !== 0 ? <PlayerDetails player={this.state.player[Constants.player.players[1].id]} /> : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='col-md-4'>
+                        <div className='display-inline-block'>
+                            <Dice value={this.state.firstDice} />
+                            <Dice value={this.state.secondDice} />
+                            <Roll onClickRoll={this.getRandomInt} onDisableDice={this.state.disableDice} btnStyle={btnRoll} />
 
-                    <Result total={this.state.totalDiceCount} />
+                            <Result total={this.state.totalDiceCount} />
 
+                            <DiceTurns playerId={this.state.currentPlayer} diceHistory={this.state.currentDiceTurn} />
+                        </div>
+                    </div>
+                    <div className='col-md-4'>
+                        <div className="container">
+                            <div className='col-md-11'>
+                                <div className='player-details'>
+                                    {/* {this.state.player ? <PlayerDetails player={this.state.player[Constants.player[2].id]} /> : ''} */}
+                                    {Object.keys(this.state.player).length !== 0 ? <PlayerDetails player={this.state.player[Constants.player.players[2].id]} /> : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                    <DiceTurns playerId={Constants.player[1].id} diceHistory={this.state.currentDiceTurn} />
+                <div className='row'>
+                    <div className='offset-md-2 col-md-8'>
+                        {this.state.player && this.state.currentDiceTurn.length > 0 ?
+                            <Strategy player={this.state.player} currentPlayer={this.state.currentPlayer} currenDiceTurn={this.state.currentDiceTurn}></Strategy>
+                            : ''
+                        }
+                    </div>
                 </div>
-                <div className='player-details display-inline-block'>
-                    {/* {this.state.player ? <PlayerDetails player={this.state.player[constants.player[2].id]} /> : ''} */}
-                    {Object.keys(this.state.player).length !== 0 ? <PlayerDetails player={this.state.player[constants.player[2].id]} /> : ''}
-                </div>
-                <hr />
-                {/* <DiceHistory /> */}
             </div >
         );
     };
@@ -120,8 +195,9 @@ const mapDispatchToProps = dispatch => {
         //     dispatch(fetchDiceHistory(playerData));
         // },
 
-        onUpdateDiceHistory: diceHistory => {
-            dispatch(updateDiceHistory(diceHistory));
+        onUpdateDiceTurns: diceDetails => {
+            // console.log("DICE DETAILS: ", diceDetails);
+            dispatch(updateDiceTurns(diceDetails));
         },
 
         onUpdatePlayerDetails: (playerData) => {

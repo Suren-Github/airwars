@@ -5,7 +5,7 @@ const Dice = (props) => {
         listStyleType: 'none',
         border: '1px solid black',
         display: 'inline-block',
-        padding: '12px',       
+        padding: '12px',
         height: '98px',
         minWidth: '13.781px',
         // marginLeft: '10px',
@@ -16,10 +16,10 @@ const Dice = (props) => {
 
     return (
         <ul style={liStyle} className='dice'>
-            {[...Array(props.value)].map((x, i) =>
-                <li> &#9673;</li>
+            {[...Array(props.value)].map((value, index) =>
+                <li key={index}> &#9673;</li>
             )}
-        </ul>        
+        </ul>
     )
 
     // return (

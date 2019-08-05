@@ -1,0 +1,2 @@
+Select screen for the pieces
+Set red as player 1 theme and green as player 2
