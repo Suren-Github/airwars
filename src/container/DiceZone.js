@@ -67,7 +67,7 @@ class DiceZone extends React.Component {
 
             this.props.onUpdateDiceTurns({ uname: Constants.player.players[this.state.currentPlayer].uname, turns: currentDiceTurn });
 
-            this.setState({ currentDiceTurn: currentDiceTurn, currentPlayer: this.state.currentPlayer === 1 ? 2 : 1, disableDice: true, });
+            this.setState({ currentDiceTurn: currentDiceTurn, currentPlayer: this.state.currentPlayer === 1 ? 2 : 1,  }); //disableDice: true,
 
 
             // this.setState({currentPlayer: currentPlayer === 1 ? 2 : 1});
