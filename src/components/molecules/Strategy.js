@@ -11,6 +11,7 @@ class Strategy extends Component {
         }
     }
 
+
     componentWillReceiveProps(nextProps) {
         let pieces = this.state.pieces,
             currenDiceTurn = nextProps.currenDiceTurn,
@@ -32,12 +33,12 @@ class Strategy extends Component {
 
     render() {
 
-        console.log('Player: ', this.props);
+        console.log('Player: ', this.state);
         return (
             <div className='container-fluid'>
                 <h5> Strategy </h5>
                 <h6> Player{this.props.currentPlayer}</h6>
-                <div className='row'>
+                {/* <div className='row'>
                     <div className='col-md-10'>
                         <ul className='list-style-none'>
                             {this.props.currenDiceTurn.map((values, key) => {
@@ -45,35 +46,55 @@ class Strategy extends Component {
                             })}
                         </ul>
                     </div>
+                </div> */}
+
+                <div className='row'>
+                    <div className='offset-md-2 col-md-10 turn-value'>
+                        {
+                            this.props.currenDiceTurn.map((value) => {
+                                return (
+                                    <div className='each-turn'>
+                                        {value}
+                                    </div>
+                                )
+                            })
+                        }
+
+                    </div>
                 </div>
+
                 <div className='row'>
                     <div className='col-md-2'>
-                        <ul className='list-style-none'>
-                            {Object.keys(this.state.strategyMap).map((piece, key) => {
-                                return (<li className='strategy-dice-turn' key={key}>{piece}</li>);
+                        <div>
+                            {this.state.pieces.map((piece, key) => {
+                                return (<p className='display-inline-block strategy-dice-turn' key={piece.id}>{piece.label}</p>);
                             })}
-                        </ul>
+                        </div>
                     </div>
 
-                    <div className='col-md-10'>
-                        <ul className='list-style-none'>
-                            {
-                                Object.keys(this.state.strategyMap).map((value, index) => {
-                                    return (
-                                        <li className='display-inline-block'>
-                                            <ul className='list-style-none' style={{ display: 'flex', padding: 0 }}>
-                                                {this.state.strategyMap[value].map((val, key) =>
-                                                    // <div className='strategy-dice' key={key}>{val}</div>
-                                                    <li className='strategy-dice-turn'>{ }</li>
-                                                )}
-                                            </ul>
-                                        </li>
-                                    )
-                                })}
+                    <div>
 
-                        </ul>
+                        {this.state.pieces.map((piece) => {
+                            return (
+                                <div className='row'>
+                                    <ul>
+                                        {this.props.currenDiceTurn.map((value, key) => {
+                                            return (
+                                                <li className='each-turn'>
+                                                    {value}
+                                                </li>
+                                            )
+                                        })
+                                        }
+                                    </ul>
+                                </div>
+                            )
+                        })}
+
+                        {/* </div> */}
                     </div>
                 </div>
+
             </div >
         );
     }
@@ -123,3 +144,55 @@ export default Strategy;
 //             </div >
 //         );
 //     }
+
+
+
+
+
+// render() {
+
+//     console.log('Player: ', this.props);
+//     return (
+//         <div className='container-fluid'>
+//             <h5> Strategy </h5>
+//             <h6> Player{this.props.currentPlayer}</h6>
+//             <div className='row'>
+//                 <div className='col-md-10'>
+//                     <ul className='list-style-none'>
+//                         {this.props.currenDiceTurn.map((values, key) => {
+//                             return (<li className='display-inline-block strategy-dice-turn' key={key}>{values}</li>);
+//                         })}
+//                     </ul>
+//                 </div>
+//             </div>
+//             <div className='row'>
+//                 <div className='col-md-2'>
+//                     <ul className='list-style-none'>
+//                         {Object.keys(this.state.strategyMap).map((piece, key) => {
+//                             return (<li className='strategy-dice-turn' key={key}>{piece}</li>);
+//                         })}
+//                     </ul>
+//                 </div>
+
+//                 <div className='col-md-10'>
+//                     <ul className='list-style-none'>
+//                         {
+//                             Object.keys(this.state.strategyMap).map((value, index) => {
+//                                 return (
+//                                     <li className='display-inline-block'>
+//                                         <ul className='list-style-none' style={{ display: 'flex', padding: 0 }}>
+//                                             {this.state.strategyMap[value].map((val, key) =>
+//                                                 // <div className='strategy-dice' key={key}>{val}</div>
+//                                                 <li className='strategy-dice-turn'>{ }</li>
+//                                             )}
+//                                         </ul>
+//                                     </li>
+//                                 )
+//                             })}
+
+//                     </ul>
+//                 </div>
+//             </div>
+//         </div >
+//     );
+// }
