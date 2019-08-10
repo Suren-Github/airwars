@@ -23,13 +23,12 @@ class Strategy extends Component {
             }
         }
         this.setState({ strategyMap });
-        console.log('strategyMap: ', strategyMap);
+        // console.log('strategyMap: ', strategyMap);
 
         // let pieces = Object.values(nextProps.player[nextProps.currentPlayer].pieces);
         // console.log('pieces: ', pieces);
         // this.setState({ pieces });
     }
-
 
     render() {
 
@@ -51,9 +50,9 @@ class Strategy extends Component {
                 <div className='row'>
                     <div className='offset-md-2 col-md-10 turn-value'>
                         {
-                            this.props.currenDiceTurn.map((value) => {
+                            this.props.currenDiceTurn.map((value, key) => {
                                 return (
-                                    <div className='each-turn'>
+                                    <div className='each-turn' key={key}>
                                         {value}
                                     </div>
                                 )
@@ -74,13 +73,13 @@ class Strategy extends Component {
 
                     <div>
 
-                        {this.state.pieces.map((piece) => {
+                        {this.state.pieces.map((piece, index) => {
                             return (
-                                <div className='row'>
+                                <div className='row' key={index}>
                                     <ul>
                                         {this.props.currenDiceTurn.map((value, key) => {
                                             return (
-                                                <li className='each-turn'>
+                                                <li className='each-turn' key={key} onClick={() => this.props.validateSelectedValue(value, piece)}>
                                                     {value}
                                                 </li>
                                             )
@@ -101,98 +100,3 @@ class Strategy extends Component {
 }
 
 export default Strategy;
-
-
-//  render() {
-
-//         console.log('Player: ', this.props);
-//         return (
-//             <div className='container'>
-//                 <h5> Strategy </h5>
-//                 <h6> Player{this.props.currentPlayer}</h6>
-//                 <div className='row'>
-//                     <div className='offset-md-4 col-md-8'>
-//                         <ul className='list-style-none'>
-//                             {this.props.currenDiceTurn.map((values, key) => {
-//                                 return (<li className='display-inline-block strategy-dice-turn' key={key}>{values}</li>);
-//                             })}
-//                         </ul>
-//                     </div>
-//                 </div>
-//                 <div className='row'>
-//                     <div className='col-md-4'>
-//                         <ul className='list-style-none'>
-//                             {Object.keys(this.state.strategyMap).map((piece, key) => {
-//                                 return (<li className='strategy-dice-turn' key={key}>{piece}</li>);
-//                             })}
-
-//                             {
-//                                 Object.keys(this.state.strategyMap).map((value, index) => {
-//                                     return (
-//                                         <li>
-//                                             {this.state.strategyMap[value].map((val, key) =>
-//                                                 // <div className='strategy-dice' key={key}>{val}</div>
-//                                                 <div style={{width: '20px', height: '20px', background: 'yellow', border: '1px solid black', margin: '5px'}}>{val}</div>
-//                                             )}
-//                                         </li>
-//                                     )
-//                                 })}
-
-//                         </ul>
-//                     </div>
-//                 </div>
-//             </div >
-//         );
-//     }
-
-
-
-
-
-// render() {
-
-//     console.log('Player: ', this.props);
-//     return (
-//         <div className='container-fluid'>
-//             <h5> Strategy </h5>
-//             <h6> Player{this.props.currentPlayer}</h6>
-//             <div className='row'>
-//                 <div className='col-md-10'>
-//                     <ul className='list-style-none'>
-//                         {this.props.currenDiceTurn.map((values, key) => {
-//                             return (<li className='display-inline-block strategy-dice-turn' key={key}>{values}</li>);
-//                         })}
-//                     </ul>
-//                 </div>
-//             </div>
-//             <div className='row'>
-//                 <div className='col-md-2'>
-//                     <ul className='list-style-none'>
-//                         {Object.keys(this.state.strategyMap).map((piece, key) => {
-//                             return (<li className='strategy-dice-turn' key={key}>{piece}</li>);
-//                         })}
-//                     </ul>
-//                 </div>
-
-//                 <div className='col-md-10'>
-//                     <ul className='list-style-none'>
-//                         {
-//                             Object.keys(this.state.strategyMap).map((value, index) => {
-//                                 return (
-//                                     <li className='display-inline-block'>
-//                                         <ul className='list-style-none' style={{ display: 'flex', padding: 0 }}>
-//                                             {this.state.strategyMap[value].map((val, key) =>
-//                                                 // <div className='strategy-dice' key={key}>{val}</div>
-//                                                 <li className='strategy-dice-turn'>{ }</li>
-//                                             )}
-//                                         </ul>
-//                                     </li>
-//                                 )
-//                             })}
-
-//                     </ul>
-//                 </div>
-//             </div>
-//         </div >
-//     );
-// }

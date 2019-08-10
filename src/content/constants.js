@@ -11,6 +11,7 @@ const Constants = {
     },
     dice: {
         sidesOfDice: 4,
+        spawnValue: 1,
         firstDice: 'firstDice',
         secondDice: 'secondDice',
         twelve: 12,
@@ -19,6 +20,8 @@ const Constants = {
     },
     player: {
         currentPlayer: 1,
+        player1: 1,
+        player2: 2,
         players: {
             1: {
                 id: 1,
@@ -26,7 +29,7 @@ const Constants = {
                 name: 'Player 1',
                 logo: '/static/media/avengers.743666bc.png',
                 // currentTurn: [],
-                diceHistory: {},
+                diceHistory: {}, // Need to make it as an array, display the last 3 turns just like in Cricket overs/ runs display
                 pieces: {},
                 // color: '#e33e3e75',
             },

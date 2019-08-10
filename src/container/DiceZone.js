@@ -36,6 +36,7 @@ class DiceZone extends React.Component {
             disableDice: false,
             player: {},
             currentPlayer: 1,
+            strategyMapping: {}
         };
 
         // console.log('Constructor: ',Constants);
@@ -61,13 +62,15 @@ class DiceZone extends React.Component {
             totalDiceCount = Number(this.state.firstDice) + Number(this.state.secondDice);
         }
 
-        let currentDiceTurn = [...this.state.currentDiceTurn, totalDiceCount];
+        let currentDiceTurn = [...this.state.currentDiceTurn, totalDiceCount],
+            mappingIndex = Object.keys(this.state.strategyMapping || 0).length, // O to be set as initial condition when the object is empty
+            strategyMapping = {...this.state.strategyMapping, [mappingIndex]: { id: mappingIndex, totalDiceCount, assignedToPlayer: this.state.currentPlayer, isAssigned: false }}; // Swapping currently player will be resolved automatically during the flow
 
         if (_.includes(Constants.dice.noDoubles, totalDiceCount)) {
 
             this.props.onUpdateDiceTurns({ uname: Constants.player.players[this.state.currentPlayer].uname, turns: currentDiceTurn });
 
-            this.setState({ currentDiceTurn: currentDiceTurn, currentPlayer: this.state.currentPlayer === 1 ? 2 : 1,  }); //disableDice: true,
+            this.setState({ currentDiceTurn: currentDiceTurn, currentPlayer: this.state.currentPlayer === Constants.player.player1 ? Constants.player.player2 : Constants.player.player1, strategyMapping }); //disableDice: true,
 
 
             // this.setState({currentPlayer: currentPlayer === 1 ? 2 : 1});
@@ -82,7 +85,7 @@ class DiceZone extends React.Component {
             return false;
         }
 
-        this.setState({ totalDiceCount, currentDiceTurn: currentDiceTurn });
+        this.setState({ totalDiceCount, currentDiceTurn: currentDiceTurn, strategyMapping });
     }
 
     /** Generates piece structure for both the players. Included to the playerData object  */
@@ -117,6 +120,37 @@ class DiceZone extends React.Component {
 
         // console.log(p1Pieces, p2Pieces);
         return { p1Pieces, p2Pieces };
+    }
+
+    spawnPiece(value, piece) {
+        console.log("entered spawn piece");
+
+        
+        debugger;
+        
+        console.log(this.state);
+        // this.state.strategyMapping;
+        // Move the coin to position based on the current player and update the object 'this.state.player[strategyMappedValue.assignedToPlayer].pieces[piece.id].position = ' and update isSpawned state to true of the selected piece
+    }
+
+    movePiece(value, piece) {
+        console.log("entered move piece");
+    }
+
+    validateSelectedValue = (value, piece) => {
+        debugger;
+        console.log(value, piece);
+        console.log(this.state);
+        let pieces = this.state.player[this.state.currentPlayer].pieces;
+
+
+        // Temporary condition - To be removed: (By default, the currentPlayer will work)
+        piece.id = this.state.currentPlayer === 1 ? '1P1' : '2P1';
+
+
+        // Check if the value is not already been assigned to any of the piece in the strategyMapping
+        !pieces[piece.id].isSpawned && value === Constants.dice.spawnValue ? this.spawnPiece(value, piece) : this.movePiece(value, piece);
+        // Need to update the Strategy box with tick mark
     }
 
     componentWillMount() {
@@ -175,7 +209,7 @@ class DiceZone extends React.Component {
                 <div className='row'>
                     <div className='offset-md-2 col-md-8'>
                         {this.state.player && this.state.currentDiceTurn.length > 0 ?
-                            <Strategy player={this.state.player} currentPlayer={this.state.currentPlayer} currenDiceTurn={this.state.currentDiceTurn}></Strategy>
+                            <Strategy player={this.state.player} currentPlayer={this.state.currentPlayer} currenDiceTurn={this.state.currentDiceTurn} validateSelectedValue={this.validateSelectedValue}></Strategy>
                             : ''
                         }
                     </div>
